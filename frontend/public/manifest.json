@@ -1,0 +1,17 @@
+{
+  "name": "LeftOverLove",
+  "short_name": "LeftOverLove",
+  "description": "A platform to reduce food waste by connecting surplus food with those in need",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#22c55e",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
