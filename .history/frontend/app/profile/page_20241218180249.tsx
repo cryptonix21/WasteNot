@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useAuth } from '../context/auth.context';
 import { getProfile } from '../services/profile.service';
@@ -11,21 +11,21 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const loadProfile = useCallback(async () => {
+  useEffect(() => {
+    loadProfile();
+  }, [loadProfile]);
+
+  const loadProfile = async () => {
     try {
       setIsLoading(true);
       const profileData = await getProfile();
       setUser(profileData);
-    } catch (err:any) {
+    } catch (err) {
       setError(err.message);
     } finally {
       setIsLoading(false);
     }
-  }, [setUser]);
-
-  useEffect(() => {
-    loadProfile();
-  }, [loadProfile]);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-white py-12 px-4 sm:px-6 lg:px-8">

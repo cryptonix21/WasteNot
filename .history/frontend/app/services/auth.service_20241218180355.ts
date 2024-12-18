@@ -53,7 +53,7 @@ export const signIn = async (credentials: { email: string; password: string }): 
     }
 
     return data;
-  } catch (error: any | { response?: { data?: { message?: string } } }) {
+  } catch (error:  | { response?: { data?: { message?: string } } }) {
     console.error('Signin error:', 'response' in error ? error.response?.data : error.message);
     throw new Error('response' in error ? error.response?.data?.message || 'Failed to sign in' : error.message);
   }

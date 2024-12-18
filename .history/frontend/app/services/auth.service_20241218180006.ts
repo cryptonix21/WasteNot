@@ -28,7 +28,7 @@ export const signUp = async (userData: { email: string; password: string;fullNam
     }
 
     return data;
-  } catch (error: any | { response?: { data?: { message?: string }, status?: number } }) {
+  } catch (error: Error | { response?: { data?: { message?: string }, status?: number } }) {
     console.error('Signup error details:', {
       response: error.response?.data,
       status: error.response?.status,
@@ -53,7 +53,7 @@ export const signIn = async (credentials: { email: string; password: string }): 
     }
 
     return data;
-  } catch (error: any | { response?: { data?: { message?: string } } }) {
+  } catch (error: Error | { response?: { data?: { message?: string } } }) {
     console.error('Signin error:', 'response' in error ? error.response?.data : error.message);
     throw new Error('response' in error ? error.response?.data?.message || 'Failed to sign in' : error.message);
   }
