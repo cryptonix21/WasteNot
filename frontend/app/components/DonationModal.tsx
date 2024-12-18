@@ -4,6 +4,7 @@ import { FoodDonation, notificationApi } from '@/app/api/donations/api';
 import { format } from 'date-fns';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import toast from 'react-hot-toast';
 
 interface DonationModalProps {
@@ -65,10 +66,12 @@ export default function DonationModal({ donation, isOpen, onClose }: DonationMod
             {/* Image */}
             {donation.images && donation.images.length > 0 && (
               <div className="relative w-full h-64 sm:h-96">
-                <img
+                <Image
                   src={donation.images[0]}
                   alt={donation.foodName}
-                  className="object-cover w-full h-full"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 640px, 1024px"
                 />
               </div>
             )}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 
 const loader = new Loader({
@@ -22,10 +22,9 @@ interface LocationPickerProps {
     address: string;
     shareExactLocation: boolean;
   }) => void;
-  error?: string;
 }
 
-export default function LocationPicker({ value, onChange, error }: LocationPickerProps) {
+export default function LocationPicker({ value, onChange }: LocationPickerProps) {
   const [locationType, setLocationType] = useState<'gps' | 'address'>('address');
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -152,9 +151,9 @@ export default function LocationPicker({ value, onChange, error }: LocationPicke
       )}
 
       {/* Error Message */}
-      {(error || loadError) && (
+      {loadError && (
         <div className="text-red-600 text-sm">
-          {error || loadError}
+          {loadError}
         </div>
       )}
 
@@ -166,9 +165,7 @@ export default function LocationPicker({ value, onChange, error }: LocationPicke
             value={value?.address || ''}
             onChange={handleAddressChange}
             placeholder="Enter your address"
-            className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 ${
-              error ? 'border-red-300' : ''
-            }`}
+            className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500`}
           />
         </div>
       )}

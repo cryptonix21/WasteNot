@@ -7,6 +7,10 @@ import { useRouter } from 'next/navigation';
 import { signIn } from '../../services/auth.service';
 import { useAuth } from '../../context/auth.context';
 
+interface LoginError {
+  message: string;
+}
+
 export default function SignIn() {
   const router = useRouter();
   const { login } = useAuth();
@@ -24,8 +28,9 @@ export default function SignIn() {
       const { token, user } = await signIn({ email, password });
       login(user, token);  
       router.push('/');
-    } catch (err: any) {
-      setError(err.message || 'Failed to sign in. Please check your credentials.');
+    } catch (err: unknown) {
+      const error = err as LoginError;
+      setError(error.message || 'Failed to sign in. Please check your credentials.');
     } finally {
       setIsLoading(false);
     }

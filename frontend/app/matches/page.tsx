@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { foodDonationApi, FoodDonation } from '@/app/api/donations/api';
 import DonationModal from '../components/DonationModal';
 
@@ -27,12 +28,16 @@ export default function Matches() {
 
   useEffect(() => {
     fetchDonations();
-  }, [searchRadius]);
+  }, [searchRadius, fetchDonations]);
 
   const fetchDonations = async () => {
+    interface SearchParams {
+      radius?: number;
+    }
+    
     try {
       setLoading(true);
-      const params: any = {
+      const params: SearchParams = {
         radius: searchRadius
       };
 
@@ -164,11 +169,13 @@ export default function Matches() {
                 onClick={() => setSelectedDonation(donation)}
               >
                 {donation.images && donation.images.length > 0 && (
-                  <div className="aspect-w-16 aspect-h-9">
-                    <img
+                  <div className="relative h-48 w-full mb-4">
+                    <Image
                       src={donation.images[0]}
                       alt={donation.foodName}
-                      className="object-cover w-full h-48"
+                      fill
+                      className="object-cover rounded-lg"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 384px, 384px"
                     />
                   </div>
                 )}

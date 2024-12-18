@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Line, Doughnut, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -44,8 +43,9 @@ export default function Analytics() {
         const analyticsData = await analyticsApi.getAnalytics();
         setData(analyticsData);
         setError(null);
-      } catch (err: any) {
-        setError(err.message || 'Failed to fetch analytics data');
+      } catch (error: unknown) {
+        const err = error as { message: string };
+        console.error('Error fetching analytics:', err.message);
         toast.error('Failed to load analytics data');
       } finally {
         setLoading(false);
@@ -98,7 +98,7 @@ export default function Analytics() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
             <h1 className="text-4xl font-bold text-gray-900">Analytics Dashboard</h1>
-            <p className="mt-2 text-gray-600">Track your community's impact</p>
+            <p className="text-gray-600 mb-8">Here&apos;s a summary of your food donations and their impact on the community.</p>
           </div>
         </div>
 

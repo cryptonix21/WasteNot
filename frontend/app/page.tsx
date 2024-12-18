@@ -1,4 +1,4 @@
-import { authApi } from '@/app/api/donations/api';
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
 
 export default function Home() {
@@ -153,6 +153,9 @@ export default function Home() {
       <section className="py-20 bg-green-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-white mb-8">Ready to Make a Difference?</h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Let&apos;s work together to reduce food waste and help those in need
+          </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
               href="/add-food"

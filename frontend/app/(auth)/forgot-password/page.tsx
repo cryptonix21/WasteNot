@@ -8,6 +8,15 @@ import { toast } from 'react-hot-toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
+}
+
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [resetToken, setResetToken] = useState('');
@@ -32,9 +41,10 @@ export default function ForgotPassword() {
       } else {
         toast.error(response.data.message || 'Failed to send reset token');
       }
-    } catch (err: any) {
-      console.error('Forgot password error:', err.response?.data || err.message);
-      toast.error(err.response?.data?.message || 'Failed to send reset token');
+    } catch (err: unknown) {
+      const error = err as ApiError;
+      console.error('Forgot password error:', error.response?.data || error.message);
+      toast.error(error.response?.data?.message || 'Failed to send reset token');
     } finally {
       setIsLoading(false);
     }
@@ -68,9 +78,10 @@ export default function ForgotPassword() {
       } else {
         toast.error(response.data.message || 'Failed to reset password');
       }
-    } catch (err: any) {
-      console.error('Reset password error:', err.response?.data || err.message);
-      toast.error(err.response?.data?.message || 'Failed to reset password');
+    } catch (err: unknown) {
+      const error = err as ApiError;
+      console.error('Reset password error:', error.response?.data || error.message);
+      toast.error(error.response?.data?.message || 'Failed to reset password');
     } finally {
       setIsLoading(false);
     }

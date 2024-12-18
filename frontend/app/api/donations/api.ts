@@ -109,6 +109,16 @@ export interface AnalyticsData {
   categoryDistribution: Record<string, number>;
 }
 
+interface ApiErrorResponse {
+  response?: {
+    data?: {
+      message?: string;
+    };
+    status?: number;
+  };
+  message?: string;
+}
+
 // Auth API
 export const authApi = {
   signIn: async (credentials: { email: string; password: string }): Promise<{ token: string; user: User }> => {
@@ -122,9 +132,10 @@ export const authApi = {
       }
 
       return data;
-    } catch (error: any) {
-      console.error('Signin error:', error.response?.data || error.message);
-      throw new Error(error.response?.data?.message || 'Failed to sign in');
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Signin error:', err.response?.data || err.message);
+      throw new Error(err.response?.data?.message || 'Failed to sign in');
     }
   },
 
@@ -139,9 +150,10 @@ export const authApi = {
       }
 
       return data;
-    } catch (error: any) {
-      console.error('Signup error:', error.response?.data || error.message);
-      throw new Error(error.response?.data?.message || 'Failed to sign up');
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Signup error:', err.response?.data || err.message);
+      throw new Error(err.response?.data?.message || 'Failed to sign up');
     }
   },
 
@@ -153,16 +165,18 @@ export const authApi = {
   forgotPassword: async (email: string) => {
     try {
       await api.post('/auth/forgot-password', { email });
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Failed to send reset email');
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      throw new Error(err.response?.data?.message || 'Failed to send reset email');
     }
   },
 
   resetPassword: async (token: string, password: string) => {
     try {
       await api.post('/auth/reset-password', { token, password });
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Failed to reset password');
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      throw new Error(err.response?.data?.message || 'Failed to reset password');
     }
   }
 };
@@ -186,9 +200,10 @@ export const foodDonationApi = {
       });
 
       return response.data;
-    } catch (error: any) {
-      console.error('Error adding food donation:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error adding food donation:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -211,9 +226,10 @@ export const foodDonationApi = {
     try {
       const response = await api.get('/donations', { params });
       return response.data;
-    } catch (error: any) {
-      console.error('Error getting food donations:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error getting food donations:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -222,9 +238,10 @@ export const foodDonationApi = {
     try {
       const response = await api.get(`/donations/${id}`);
       return response.data;
-    } catch (error: any) {
-      console.error('Error getting food donation:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error getting food donation:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -245,9 +262,10 @@ export const foodDonationApi = {
       });
 
       return response.data;
-    } catch (error: any) {
-      console.error('Error updating food donation:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error updating food donation:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -255,9 +273,10 @@ export const foodDonationApi = {
   deleteFoodDonation: async (id: string): Promise<void> => {
     try {
       await api.delete(`/donations/${id}`);
-    } catch (error: any) {
-      console.error('Error deleting food donation:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error deleting food donation:', err.response?.data || err.message);
+      throw err;
     }
   }
 };
@@ -268,9 +287,10 @@ export const profileApi = {
     try {
       const response = await api.get('/profile');
       return response.data;
-    } catch (error: any) {
-      console.error('Error getting profile:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error getting profile:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -278,9 +298,10 @@ export const profileApi = {
     try {
       const response = await api.put('/profile', data);
       return response.data;
-    } catch (error: any) {
-      console.error('Error updating profile:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error updating profile:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -296,9 +317,10 @@ export const profileApi = {
       });
 
       return response.data;
-    } catch (error: any) {
-      console.error('Error updating avatar:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error updating avatar:', err.response?.data || err.message);
+      throw err;
     }
   }
 };
@@ -310,9 +332,10 @@ export const notificationApi = {
     try {
       const response = await api.get('/notifications');
       return response.data;
-    } catch (error: any) {
-      console.error('Error getting notifications:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error getting notifications:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -320,9 +343,10 @@ export const notificationApi = {
   sendDonationRequest: async (donationId: string): Promise<void> => {
     try {
       await api.post(`/notifications/request/${donationId}`);
-    } catch (error: any) {
-      console.error('Error sending donation request:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error sending donation request:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -330,9 +354,10 @@ export const notificationApi = {
   respondToRequest: async (notificationId: string, status: 'accepted' | 'rejected'): Promise<void> => {
     try {
       await api.put(`/notifications/respond/${notificationId}`, { status });
-    } catch (error: any) {
-      console.error('Error responding to request:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error responding to request:', err.response?.data || err.message);
+      throw err;
     }
   },
 
@@ -340,9 +365,10 @@ export const notificationApi = {
   markAsRead: async (notificationId: string): Promise<void> => {
     try {
       await api.patch(`/notifications/${notificationId}/read`);
-    } catch (error: any) {
-      console.error('Error marking notification as read:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error marking notification as read:', err.response?.data || err.message);
+      throw err;
     }
   }
 };
@@ -353,9 +379,10 @@ export const analyticsApi = {
     try {
       const response = await publicApi.get('/analytics');
       return response.data;
-    } catch (error: any) {
-      console.error('Error getting analytics:', error.response?.data || error.message);
-      throw error;
+    } catch (error: unknown) {
+      const err = error as ApiErrorResponse;
+      console.error('Error getting analytics:', err.response?.data || err.message);
+      throw err;
     }
   }
 };
