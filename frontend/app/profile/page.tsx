@@ -16,7 +16,8 @@ export default function Profile() {
       setIsLoading(true);
       const profileData = await getProfile();
       setUser(profileData);
-    } catch (err:any) {
+    } catch (error: unknown) {
+      const err = error as { message: string };
       setError(err.message);
     } finally {
       setIsLoading(false);

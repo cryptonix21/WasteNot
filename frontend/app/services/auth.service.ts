@@ -12,6 +12,16 @@ export interface User {
   avatar?: string;
 }
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+    status?: number;
+  };
+  message: string;
+}
+
 export const signUp = async (userData: { email: string; password: string;fullName: string }): Promise<{
   message: string; token: string; user: User 
 }> => {
@@ -28,14 +38,18 @@ export const signUp = async (userData: { email: string; password: string;fullNam
     }
 
     return data;
-  } catch (error: any | { response?: { data?: { message?: string }, status?: number } }) {
+  } catch (error: unknown) {
+    const err = error as ApiError;
     console.error('Signup error details:', {
-      response: error.response?.data,
-      status: error.response?.status,
-      message: 'response' in error ? error.response?.data?.message : error.message,
+      response: err.response?.data,
+      status: err.response?.status,
+      message: 'response' in err ? err.response?.data?.message : err.message,
       userData: userData
     });
-    throw new Error('response' in error ? error.response?.data?.message || error.response?.data || 'Failed to sign up' : error.message);
+    throw new Error('response' in err ? 
+      (err.response?.data?.message || 
+       (typeof err.response?.data === 'string' ? err.response.data : 'Failed to sign up')
+      ) : err.message || 'Unknown error');
   }
 };
 
@@ -53,8 +67,9 @@ export const signIn = async (credentials: { email: string; password: string }): 
     }
 
     return data;
-  } catch (error: any | { response?: { data?: { message?: string } } }) {
-    console.error('Signin error:', 'response' in error ? error.response?.data : error.message);
-    throw new Error('response' in error ? error.response?.data?.message || 'Failed to sign in' : error.message);
+  } catch (error: unknown) {
+    const err = error as ApiError;
+    console.error('Signin error:', 'response' in err ? err.response?.data : err.message);
+    throw new Error('response' in err ? err.response?.data?.message || 'Failed to sign in' : err.message);
   }
 };
