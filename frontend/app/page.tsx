@@ -1,5 +1,4 @@
-import { useRouter } from 'next/navigation';
-import Image from "next/image";
+'use client';
 
 export default function Home() {
   return (
@@ -126,7 +125,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900">Our Impact</h2>
-            <p className="mt-4 text-xl text-gray-600">Together, we're making a difference</p>
+            <p className="mt-4 text-xl text-gray-600">Together, we&apos;re making a difference</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
@@ -153,9 +152,7 @@ export default function Home() {
       <section className="py-20 bg-green-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-white mb-8">Ready to Make a Difference?</h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Let&apos;s work together to reduce food waste and help those in need
-          </p>
+          <p className="text-xl text-green-100 mb-8">Don&apos;t let good food go to waste. Join our community today!</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
               href="/add-food"

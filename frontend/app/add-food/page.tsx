@@ -178,9 +178,14 @@ export default function AddFood() {
       setImage(null);
       setPreviewUrl('');
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error submitting food donation:', error);
-      toast.error(error.response?.data?.error || 'Error submitting food donation');
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: { error?: string } } };
+        toast.error(axiosError.response?.data?.error || 'Error submitting food donation');
+      } else {
+        toast.error('Error submitting food donation');
+      }
     } finally {
       setIsSubmitting(false);
     }

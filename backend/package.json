@@ -2,10 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Backend for LeftOverLove food waste reduction platform",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "vercel-build": "echo hello"
   },
   "keywords": [],
   "author": "",

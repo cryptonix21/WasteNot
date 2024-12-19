@@ -40,12 +40,6 @@ export default function Navbar() {
     setIsOpen(false);
   };
 
-  const handleAddFood = (e: React.MouseEvent) => {
-    e.preventDefault();
-    router.push('/add-food');
-    handleNavigation();
-  };
-
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };

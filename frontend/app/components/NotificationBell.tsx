@@ -108,10 +108,10 @@ export default function NotificationBell() {
                     key={notification._id}
                     notification={notification as Notification}
                     onClick={() => handleNotificationClick(notification._id)}
-                    onStatusUpdate={(status) => {
+                    onStatusUpdate={(status: 'pending' | 'accepted' | 'denied') => {
                       setNotifications(notifications.map(n => 
                         n._id === notification._id
-                          ? { ...n, status, isRead: true }
+                          ? { ...n, status, isRead: true } as Notification
                           : n
                       ));
                     }}

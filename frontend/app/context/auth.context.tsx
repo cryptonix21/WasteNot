@@ -2,6 +2,26 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
+interface Donation {
+  _id: string;
+  title: string;
+  description: string;
+  quantity: number;
+  expiryDate: string;
+  status: 'available' | 'reserved' | 'completed';
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Reservation {
+  _id: string;
+  donationId: string;
+  userId: string;
+  status: 'pending' | 'accepted' | 'denied';
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface User {
   id: string;
   email: string;
@@ -10,8 +30,8 @@ interface User {
   phoneNumber?: string;
   address?: string;
   isAdmin?: boolean;
-  donations?: any[];
-  reservations?: any[];
+  donations?: Donation[];
+  reservations?: Reservation[];
   createdAt?: string;
   updatedAt?: string;
 }

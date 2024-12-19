@@ -8,11 +8,11 @@ import { format } from 'date-fns';
 interface NotificationItemProps {
   notification: Notification;
   onClick: () => void;
-  onStatusUpdate: (status: string) => void;
+  onStatusUpdate: (status: 'pending' | 'accepted' | 'denied') => void;
 }
 
 export default function NotificationItem({ notification, onClick, onStatusUpdate }: NotificationItemProps) {
-  const handleResponse = async (status: 'accepted' | 'rejected') => {
+  const handleResponse = async (status: 'accepted' | 'denied') => {
     try {
       await notificationApi.respondToRequest(notification._id, status);
       onStatusUpdate(status);
@@ -27,7 +27,7 @@ export default function NotificationItem({ notification, onClick, onStatusUpdate
     switch (status) {
       case 'accepted':
         return 'text-green-600';
-      case 'rejected':
+      case 'denied':
         return 'text-red-600';
       default:
         return 'text-gray-600';
@@ -38,8 +38,8 @@ export default function NotificationItem({ notification, onClick, onStatusUpdate
     switch (status) {
       case 'accepted':
         return 'Accepted';
-      case 'rejected':
-        return 'Rejected';
+      case 'denied':
+        return 'Denied';
       default:
         return 'Pending';
     }
@@ -79,7 +79,7 @@ export default function NotificationItem({ notification, onClick, onStatusUpdate
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                handleResponse('rejected');
+                handleResponse('denied');
               }}
               className="px-3 py-1 text-xs font-medium text-white bg-red-600 rounded hover:bg-red-700"
             >

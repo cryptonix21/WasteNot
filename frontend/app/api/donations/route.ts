@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export async function POST(request: Request) {
   try {
@@ -23,21 +23,30 @@ export async function POST(request: Request) {
     );
 
     return NextResponse.json(response.data);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error in donations API route:', error);
     
-    // More detailed error logging
-    if (error.response) {
-      console.error('Backend response error:', {
-        status: error.response.status,
-        data: error.response.data,
-      });
+    if (error instanceof AxiosError) {
+      // Handle Axios error with response
+      if (error.response) {
+        console.error('Backend response error:', {
+          status: error.response.status,
+          data: error.response.data,
+        });
+        return NextResponse.json(
+          { message: error.response.data.message || 'Server error' },
+          { status: error.response.status }
+        );
+      }
+      
+      // Handle Axios error without response (network error, etc.)
       return NextResponse.json(
-        { message: error.response.data.message || 'Server error' },
-        { status: error.response.status }
+        { message: error.message || 'Network error' },
+        { status: 500 }
       );
     }
     
+    // Handle non-Axios errors
     return NextResponse.json(
       { message: 'Internal server error' },
       { status: 500 }

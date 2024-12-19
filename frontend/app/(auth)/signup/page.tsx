@@ -57,9 +57,15 @@ export default function SignUp() {
         console.error('Invalid signup response:', signUpResponse);
         setError('Error during signup');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Signup/Login error:', err);
-      setError(err.message || 'Something went wrong during signup');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else if (typeof err === 'object' && err !== null && 'message' in err) {
+        setError(err.message as string);
+      } else {
+        setError('Something went wrong during signup');
+      }
     } finally {
       setIsLoading(false);
     }

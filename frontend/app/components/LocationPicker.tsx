@@ -22,9 +22,10 @@ interface LocationPickerProps {
     address: string;
     shareExactLocation: boolean;
   }) => void;
+  error?: string;
 }
 
-export default function LocationPicker({ value, onChange }: LocationPickerProps) {
+export default function LocationPicker({ value, onChange, error }: LocationPickerProps) {
   const [locationType, setLocationType] = useState<'gps' | 'address'>('address');
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -60,13 +61,13 @@ export default function LocationPicker({ value, onChange }: LocationPickerProps)
           });
           
           setIsLoading(false);
-        } catch (error) {
-          setLoadError('Error getting location details');
+        } catch (err) {
+          setLoadError(err instanceof Error ? err.message : 'Error getting location details');
           setIsLoading(false);
         }
       },
-      (error) => {
-        setLoadError(getGeolocationErrorMessage(error));
+      (err) => {
+        setLoadError(getGeolocationErrorMessage(err));
         setIsLoading(false);
       }
     );
@@ -151,9 +152,9 @@ export default function LocationPicker({ value, onChange }: LocationPickerProps)
       )}
 
       {/* Error Message */}
-      {loadError && (
+      {(loadError || error) && (
         <div className="text-red-600 text-sm">
-          {loadError}
+          {loadError || error}
         </div>
       )}
 
