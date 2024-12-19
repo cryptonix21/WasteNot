@@ -4,10 +4,10 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 
-const authRoutes = require('./routes/auth.routes');
-const foodDonationRoutes = require('./routes/foodDonationRoutes');
-const analyticsRoutes = require('./routes/analytics.routes');
-const notificationRoutes = require('./routes/notification.routes');
+const authRoutes = require('./api/v1/routes/auth.routes');
+const foodDonationRoutes = require('./api/v1/routes/foodDonationRoutes');
+const analyticsRoutes = require('./api/v1/routes/analytics.routes');
+const notificationRoutes = require('./api/v1/routes/notification.routes');
 
 // Load environment variables
 dotenv.config();

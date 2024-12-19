@@ -1,19 +1,25 @@
-const FoodDonation = require('../models/FoodDonation');
-const cloudinary = require('../config/cloudinary');
-const { validateFoodDonation } = require('../utils/validation');
+const FoodDonation = require('../../../models/FoodDonation');
+const cloudinary = require('../../../config/cloudinary');
+const { validateFoodDonation } = require('../../../utils/validation');
 
 // @desc    Add a new food donation
 // @route   POST /api/donations
 // @access  Private
 exports.addFoodDonation = async (req, res) => {
   try {
-    const { error } = validateFoodDonation(req.body.data);
+    // Handle both stringified and direct JSON data
+    let donationData;
+    try {
+      donationData = typeof req.body.data === 'string' ? JSON.parse(req.body.data) : req.body.data;
+    } catch (error) {
+      return res.status(400).json({ error: 'Invalid data format' });
+    }
+
+    // Validate the parsed data
+    const { error } = validateFoodDonation(donationData);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
-
-    // Parse the stringified data
-    const donationData = JSON.parse(req.body.data);
 
     // Upload image to Cloudinary if provided
     let imageData = null;
@@ -24,6 +30,12 @@ exports.addFoodDonation = async (req, res) => {
       imageData = {
         url: result.secure_url,
         publicId: result.public_id,
+      };
+    } else {
+      // Set default image if no image is provided
+      imageData = {
+        url: process.env.DEFAULT_FOOD_IMAGE || 'https://res.cloudinary.com/your-cloud-name/image/upload/v1/food-donations/default-food',
+        publicId: 'default-food'
       };
     }
 
@@ -73,18 +85,28 @@ exports.getFoodDonations = async (req, res) => {
     // Calculate pagination
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    // Get donations
+    // Get donations with all fields including image
     const donations = await FoodDonation.find(query)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(parseInt(limit))
-      .populate('userId', 'name email');
+      .populate('userId', 'name email')
+      .lean(); // Use lean() for better performance
 
     // Get total count
     const total = await FoodDonation.countDocuments(query);
 
+    // Ensure each donation has an image URL
+    const processedDonations = donations.map(donation => ({
+      ...donation,
+      image: donation.image || {
+        url: process.env.DEFAULT_FOOD_IMAGE || 'https://res.cloudinary.com/your-cloud-name/image/upload/v1/food-donations/default-food',
+        publicId: 'default-food'
+      }
+    }));
+
     res.json({
-      data: donations,
+      data: processedDonations,
       pagination: {
         currentPage: parseInt(page),
         totalPages: Math.ceil(total / parseInt(limit)),

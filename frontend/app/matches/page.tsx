@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { foodDonationApi, FoodDonation } from '@/app/api/donations/api';
@@ -26,11 +26,7 @@ export default function Matches() {
     'Other'
   ];
 
-  useEffect(() => {
-    fetchDonations();
-  }, [searchRadius, fetchDonations]);
-
-  const fetchDonations = async () => {
+  const fetchDonations = useCallback(async () => {
     interface SearchParams {
       radius?: number;
     }
@@ -50,7 +46,11 @@ export default function Matches() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchRadius]);
+
+  useEffect(() => {
+    fetchDonations();
+  }, [fetchDonations]);
 
   const filteredDonations = loading || !donations ? [] : donations.filter(donation => {
     const matchesSearch = searchQuery === '' || 

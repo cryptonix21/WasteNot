@@ -1,5 +1,18 @@
 const mongoose = require('mongoose');
 
+const pointSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ['Point'],
+    default: 'Point',
+    required: true
+  },
+  coordinates: {
+    type: [Number],
+    required: true
+  }
+});
+
 const foodDonationSchema = new mongoose.Schema({
   foodName: {
     type: String,
@@ -10,10 +23,7 @@ const foodDonationSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Category is required'],
-    enum: {
-      values: ['Fruits & Vegetables', 'Cooked Meals', 'Baked Goods', 'Dairy Products', 'Canned Foods', 'Beverages', 'Other'],
-      message: '{VALUE} is not a valid category'
-    }
+    enum: ['Fruits & Vegetables', 'Cooked Meals', 'Baked Goods', 'Dairy Products', 'Canned Foods', 'Beverages', 'Other']
   },
   quantity: {
     type: Number,
@@ -23,10 +33,7 @@ const foodDonationSchema = new mongoose.Schema({
   unit: {
     type: String,
     required: [true, 'Unit is required'],
-    enum: {
-      values: ['kg', 'g', 'pieces', 'servings', 'liters', 'ml'],
-      message: '{VALUE} is not a valid unit'
-    }
+    enum: ['kg', 'g', 'pieces', 'servings', 'liters', 'ml']
   },
   expiryDate: {
     type: Date,
@@ -47,19 +54,11 @@ const foodDonationSchema = new mongoose.Schema({
     },
     coordinates: {
       type: [Number],
-      required: true,
-      validate: {
-        validator: function(coordinates) {
-          return coordinates.length === 2 &&
-                 coordinates[0] >= -180 && coordinates[0] <= 180 && // longitude
-                 coordinates[1] >= -90 && coordinates[1] <= 90;    // latitude
-        },
-        message: 'Invalid coordinates. Longitude must be between -180 and 180, latitude between -90 and 90'
-      }
+      required: true
     },
     address: {
       type: String,
-      required: [true, 'Address is required'],
+      required: true,
       trim: true
     },
     shareExactLocation: {
@@ -70,64 +69,28 @@ const foodDonationSchema = new mongoose.Schema({
   image: {
     url: {
       type: String,
-      required: false
+      required: true
     },
     publicId: {
       type: String,
-      required: false
+      required: true
     }
   },
   status: {
     type: String,
-    enum: {
-      values: ['available', 'reserved', 'completed', 'expired'],
-      message: '{VALUE} is not a valid status'
-    },
+    enum: ['available', 'reserved', 'completed', 'expired'],
     default: 'available'
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-    index: true
-  },
-  reservedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    default: null
-  },
-  reservedAt: {
-    type: Date,
-    default: null
-  },
-  completedAt: {
-    type: Date,
-    default: null
+    required: true
   }
 }, {
-  timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  timestamps: true
 });
 
 // Index for geospatial queries
 foodDonationSchema.index({ location: '2dsphere' });
-foodDonationSchema.index({ status: 1, createdAt: -1 });
-foodDonationSchema.index({ category: 1, status: 1 });
 
-// Virtual for time until expiry
-foodDonationSchema.virtual('timeUntilExpiry').get(function() {
-  return this.expiryDate ? this.expiryDate - new Date() : null;
-});
-
-// Pre-save middleware to check expiry date
-foodDonationSchema.pre('save', function(next) {
-  if (this.expiryDate && this.expiryDate <= new Date()) {
-    this.status = 'expired';
-  }
-  next();
-});
-
-const FoodDonation = mongoose.model('FoodDonation', foodDonationSchema);
-
-module.exports = FoodDonation;
+module.exports = mongoose.model('FoodDonation', foodDonationSchema);

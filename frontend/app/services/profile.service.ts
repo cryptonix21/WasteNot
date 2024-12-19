@@ -27,7 +27,15 @@ export const getProfile = async (): Promise<User> => {
     throw new Error(error.message || 'Failed to fetch profile');
   }
 
-  return response.json();
+  const data = await response.json();
+  
+  // Ensure we have the correct field mapping
+  return {
+    id: data.id,
+    email: data.email,
+    fullName: data.fullName || data.name || '', // Try both fullName and name fields
+    avatar: data.avatar
+  };
 };
 
 export const updateProfile = async (data: ProfileUpdateData): Promise<User> => {

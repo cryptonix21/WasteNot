@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
-const notificationService = require('../services/notification.service');
+const notificationService = require('../../../services/notification.service');
 
 // Create donation request
 router.post('/request/:donationId', protect, async (req, res) => {

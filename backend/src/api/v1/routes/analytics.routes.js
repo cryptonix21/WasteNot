@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getAnalytics } = require('../services/analytics.service');
+const { getAnalytics } = require('../../../services/analytics.service');
 
 // Get analytics data
 router.get('/', async (req, res) => {
