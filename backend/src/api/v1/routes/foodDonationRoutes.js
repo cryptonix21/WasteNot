@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
-const multer = require('../middleware/upload');
 const { addFoodDonation, getFoodDonations } = require('../controllers/foodDonationController');
 
 // Routes
-router.post('/', protect,addFoodDonation);
+router.post('/', protect, addFoodDonation);
 router.get('/', getFoodDonations);
 
 module.exports = router;
