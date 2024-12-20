@@ -24,7 +24,7 @@ exports.addFoodDonation = async (req, res) => {
     // Upload image to Cloudinary if provided
     let imageData = null;
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
+      const result = await cloudinary.uploader.upload(`data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`, {
         folder: 'food-donations',
       });
       imageData = {
