@@ -25,9 +25,9 @@ export const signUp = async (userData: { email: string; password: string;fullNam
   message: string; token: string; user: User 
 }> => {
   try {
-    console.log('Sending signup data:', userData);
+   
     const response = await axios.post(`${API_URL}/auth/signup`, userData);
-    console.log('Signup response:', response.data);
+    
     const data = response.data;
 
     // Store the token and user data
@@ -55,14 +55,14 @@ export const signUp = async (userData: { email: string; password: string;fullNam
 export const signIn = async (credentials: { email: string; password: string }): Promise<{ token: string; user: User }> => {
   try {
     const response = await axios.post(`${API_URL}/auth/signin`, credentials);
-    console.log('Login response:', response.data);
+   
     const data = response.data;
 
     // Store the token in localStorage
     if (data.token) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      console.log('Stored user data:', data.user);
+      
     }
 
     return data;

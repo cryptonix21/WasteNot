@@ -27,7 +27,7 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    console.log('Current user state:', user);
+  
   }, [user]);
 
   const handleLogout = () => {

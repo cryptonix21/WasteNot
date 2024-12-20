@@ -32,7 +32,7 @@ export default function ForgotPassword() {
     
     try {
       const response = await axios.post(`${API_URL}/auth/forgotpassword`, { email });
-      console.log('Forgot password response:', response.data);
+
       
       if (response.data.success) {
         setResetToken(response.data.token);
