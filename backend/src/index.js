@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 const authRoutes = require('./api/v1/routes/auth.routes');
-const foodDonationRoutes = require('./api/v1/routes/foodDonationRoutes');
+const donationRoutes = require('./api/v1/routes/foodDonationRoutes');
 const analyticsRoutes = require('./api/v1/routes/analytics.routes');
 const notificationRoutes = require('./api/v1/routes/notification.routes');
 
@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/donations', foodDonationRoutes);
+app.use('/api/donations', donationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/notifications', notificationRoutes);
 

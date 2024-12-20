@@ -1,6 +1,41 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+interface ImpactStats {
+  activeUsers: number;
+  mealsShared: number;
+  foodSaved: number;
+  communitiesReached: number;
+}
+
 export default function Home() {
+  const [stats, setStats] = useState<ImpactStats>({
+    activeUsers: 2000,
+    mealsShared: 15000,
+    foodSaved: 5000,
+    communitiesReached: 500
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/analytics/impact`);
+        if (response.data) {
+          setStats(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching impact stats:', error);
+      }
+    };
+
+    fetchStats();
+    // Fetch stats every 5 minutes
+    const interval = setInterval(fetchStats, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-green-50">
       {/* Hero Section */}
@@ -123,26 +158,30 @@ export default function Home() {
       {/* Impact Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-900">Our Impact</h2>
             <p className="mt-4 text-xl text-gray-600">Together, we&apos;re making a difference</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-green-600 mb-2">2,000+</div>
-              <div className="text-gray-600">Active Users</div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="p-6 bg-green-50 rounded-2xl text-center transform hover:scale-105 transition-transform duration-300">
+              <div className="text-4xl font-bold text-green-600 mb-2">{stats.activeUsers}</div>
+              <div className="text-gray-600 font-medium">Active Users</div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-green-600 mb-2">15,000+</div>
-              <div className="text-gray-600">Meals Shared</div>
+            
+            <div className="p-6 bg-green-50 rounded-2xl text-center transform hover:scale-105 transition-transform duration-300">
+              <div className="text-4xl font-bold text-green-600 mb-2">{stats.mealsShared}</div>
+              <div className="text-gray-600 font-medium">Meals Shared</div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-green-600 mb-2">5,000+</div>
-              <div className="text-gray-600">KG Food Saved</div>
+            
+            <div className="p-6 bg-green-50 rounded-2xl text-center transform hover:scale-105 transition-transform duration-300">
+              <div className="text-4xl font-bold text-green-600 mb-2">{stats.foodSaved}</div>
+              <div className="text-gray-600 font-medium">KG Food Saved</div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-green-600 mb-2">500+</div>
-              <div className="text-gray-600">Communities Reached</div>
+            
+            <div className="p-6 bg-green-50 rounded-2xl text-center transform hover:scale-105 transition-transform duration-300">
+              <div className="text-4xl font-bold text-green-600 mb-2">{stats.communitiesReached}</div>
+              <div className="text-gray-600 font-medium">Communities Reached</div>
             </div>
           </div>
         </div>
